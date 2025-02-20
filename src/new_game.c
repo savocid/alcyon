@@ -50,6 +50,7 @@ extern const u8 EventScript_ResetAllMapFlags[];
 
 static void ClearFrontierRecord(void);
 static void WarpToTruck(void);
+static void WarpToStartingPoint(void);
 static void ResetMiniGamesRecords(void);
 static void ResetItemFlags(void);
 
@@ -131,6 +132,11 @@ static void WarpToTruck(void)
     WarpIntoMap();
 }
 
+static void WarpToStartingPoint(void)
+{
+    SetWarpDestination(MAP_GROUP(LITTLEROOT_TOWN_BRENDANS_HOUSE_2F), MAP_NUM(LITTLEROOT_TOWN_BRENDANS_HOUSE_2F), WARP_ID_NONE, -1, -1);
+    WarpIntoMap();
+}
 void Sav2_ClearSetDefault(void)
 {
     ClearSav2();
@@ -193,7 +199,8 @@ void NewGameInitData(void)
     InitDewfordTrend();
     ResetFanClub();
     ResetLotteryCorner();
-    WarpToTruck();
+    //WarpToTruck();
+    WarpToStartingPoint();
     RunScriptImmediately(EventScript_ResetAllMapFlags);
     ResetMiniGamesRecords();
     InitUnionRoomChatRegisteredTexts();
