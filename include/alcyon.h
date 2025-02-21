@@ -1,0 +1,4 @@
+#ifndef GUARD_ALCYON_H
+#define GUARD_ALCYON_H
+
+#endif // GUARD_ALCYON_H
