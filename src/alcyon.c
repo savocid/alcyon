@@ -4,6 +4,7 @@
 
 void AlcyonInit(void)
 {
+    FlagSet(FLAG_RECEIVED_RUNNING_SHOES);
     FlagSet(FLAG_NO_BAG_USE);
     FlagSet(FLAG_NO_CATCHING);
 }
