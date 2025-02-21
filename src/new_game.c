@@ -45,6 +45,7 @@
 #include "mystery_gift.h"
 #include "union_room_chat.h"
 #include "constants/items.h"
+#include "alcyon.h"
 
 extern const u8 EventScript_ResetAllMapFlags[];
 
@@ -201,6 +202,7 @@ void NewGameInitData(void)
     ResetLotteryCorner();
     //WarpToTruck();
     WarpToStartingPoint();
+    AlcyonInit();
     RunScriptImmediately(EventScript_ResetAllMapFlags);
     ResetMiniGamesRecords();
     InitUnionRoomChatRegisteredTexts();
