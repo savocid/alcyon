@@ -368,7 +368,8 @@ void DoWhiteOut(void)
         SetMoney(&gSaveBlock1Ptr->money, GetMoney(&gSaveBlock1Ptr->money) / 2);
     HealPlayerParty();
     Overworld_ResetStateAfterWhiteOut();
-    SetWarpDestinationToLastHealLocation();
+    //SetWarpDestinationToLastHealLocation();
+    SetWarpDestinationToEndZone();
     WarpIntoMap();
 }
 
@@ -707,6 +708,21 @@ void SetWarpDestinationToLastHealLocation(void)
         SetWhiteoutRespawnWarpAndHealerNPC(&sWarpDestination);
     else
         sWarpDestination = gSaveBlock1Ptr->lastHealLocation;
+}
+
+void SetWarpDestinationToEndZone(void)
+{
+  
+    static const struct WarpData sEndZoneWarpData =
+    {
+        .mapGroup = MAP_GROUP(BIRTH_ISLAND_EXTERIOR),
+        .mapNum = MAP_NUM(BIRTH_ISLAND_EXTERIOR),
+        .warpId = WARP_ID_NONE,
+        .x = -1,
+        .y = -1,
+    };
+
+    sWarpDestination = sEndZoneWarpData;
 }
 
 void SetLastHealLocationWarp(u8 healLocationId)

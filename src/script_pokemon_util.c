@@ -35,8 +35,17 @@ static void HealPlayerBoxes(void);
 void HealPlayerParty(void)
 {
     u32 i;
+    bool8 allFainted = TRUE;
+
     for (i = 0; i < gPlayerPartyCount; i++)
-        HealPokemon(&gPlayerParty[i]);
+    {
+        if (!GetMonData(&gPlayerParty[i], MON_DATA_HP, NULL) == 0)
+            allFainted = FALSE;
+            break;
+    }
+    for (i = 0; i < gPlayerPartyCount; i++)
+        if (allFainted || !GetMonData(&gPlayerParty[i], MON_DATA_HP, NULL) == 0)
+            HealPokemon(&gPlayerParty[i]);
     if (OW_PC_HEAL >= GEN_8)
         HealPlayerBoxes();
 
