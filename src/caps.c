@@ -117,3 +117,19 @@ u32 GetCurrentEVCap(void)
 
     return MAX_TOTAL_EVS;
 }
+
+
+void AutomaticLevelCap(void)
+{
+    s32 i;
+    u32 levelCap = GetCurrentLevelCap();
+
+    for (i = 0; i < PARTY_SIZE; i++)
+    {
+        u16 species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES, NULL);
+        u32 expToGive = gExperienceTables[gSpeciesInfo[species].growthRate][levelCap];
+
+        SetMonData(&gPlayerParty[i], MON_DATA_EXP, &expToGive);
+        CalculateMonStats(&gPlayerParty[i]);
+    }
+}

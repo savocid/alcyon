@@ -4628,6 +4628,12 @@ static void Cmd_getexp(void)
                             gBattleMoveDamage = gExperienceTables[growthRate][levelCap] - currentExp;
                     }
 
+                    if (B_LEVEL_CAP_AUTO && (B_LEVEL_CAP_TYPE == LEVEL_CAP_FLAG_LIST || B_LEVEL_CAP_TYPE == LEVEL_CAP_VARIABLE))
+                    {
+                        gBattleMoveDamage = 0;
+                    }
+                        
+
                     if (IsTradedMon(&gPlayerParty[*expMonId]))
                     {
                         // check if the Pokémon doesn't belong to the player
@@ -4661,15 +4667,18 @@ static void Cmd_getexp(void)
                     PREPARE_STRING_BUFFER(gBattleTextBuff2, i);
                     PREPARE_WORD_NUMBER_BUFFER(gBattleTextBuff3, 6, gBattleMoveDamage);
 
-                    if (wasSentOut || holdEffect == HOLD_EFFECT_EXP_SHARE)
+                    if (!B_LEVEL_CAP_AUTO && !(B_LEVEL_CAP_TYPE == LEVEL_CAP_FLAG_LIST || B_LEVEL_CAP_TYPE == LEVEL_CAP_VARIABLE))
                     {
-                        PrepareStringBattle(STRINGID_PKMNGAINEDEXP, gBattleStruct->expGetterBattlerId);
-                    }
-                    else if (IsGen6ExpShareEnabled() && !gBattleStruct->teamGotExpMsgPrinted) // Print 'the rest of your team got exp' message once, when all of the sent-in mons were given experience
-                    {
-                        gLastUsedItem = ITEM_EXP_SHARE;
-                        PrepareStringBattle(STRINGID_TEAMGAINEDEXP, gBattleStruct->expGetterBattlerId);
-                        gBattleStruct->teamGotExpMsgPrinted = TRUE;
+                        if (wasSentOut || holdEffect == HOLD_EFFECT_EXP_SHARE)
+                        {
+                            PrepareStringBattle(STRINGID_PKMNGAINEDEXP, gBattleStruct->expGetterBattlerId);
+                        }
+                        else if (IsGen6ExpShareEnabled() && !gBattleStruct->teamGotExpMsgPrinted) // Print 'the rest of your team got exp' message once, when all of the sent-in mons were given experience
+                        {
+                            gLastUsedItem = ITEM_EXP_SHARE;
+                            PrepareStringBattle(STRINGID_TEAMGAINEDEXP, gBattleStruct->expGetterBattlerId);
+                            gBattleStruct->teamGotExpMsgPrinted = TRUE;
+                        }
                     }
 
                     MonGainEVs(&gPlayerParty[*expMonId], gBattleMons[gBattlerFainted].species);
