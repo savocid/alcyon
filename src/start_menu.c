@@ -55,6 +55,7 @@ enum
 {
     MENU_ACTION_POKEDEX,
     MENU_ACTION_POKEMON,
+    MENU_ACTION_PC,
     MENU_ACTION_HEAL,
     MENU_ACTION_FLY,
     MENU_ACTION_BAG,
@@ -99,6 +100,7 @@ EWRAM_DATA static u8 sSaveInfoWindowId = 0;
 // Menu action callbacks
 static bool8 StartMenuPokedexCallback(void);
 static bool8 StartMenuPokemonCallback(void);
+static bool8 StartMenuPCCallback(void);
 static bool8 StartMenuHealCallback(void);
 static bool8 StartMenuFlyCallback(void);
 static bool8 StartMenuBagCallback(void);
@@ -190,12 +192,14 @@ static const struct WindowTemplate sWindowTemplate_PyramidPeak = {
 
 static const u8 sText_MenuDebug[] = _("DEBUG");
 static const u8 sText_MenuHeal[] = _("HEAL");
+static const u8 sText_MenuPC[] = _("PC");
 static const u8 sText_MenuFly[] = _("FLY");
 
 static const struct MenuAction sStartMenuItems[] =
 {
     [MENU_ACTION_POKEDEX]         = {gText_MenuPokedex, {.u8_void = StartMenuPokedexCallback}},
     [MENU_ACTION_POKEMON]         = {gText_MenuPokemon, {.u8_void = StartMenuPokemonCallback}},
+    [MENU_ACTION_PC]              = {sText_MenuPC,      {.u8_void = StartMenuPCCallback}},
     [MENU_ACTION_HEAL]            = {sText_MenuHeal,    {.u8_void = StartMenuHealCallback}},
     [MENU_ACTION_FLY]             = {sText_MenuFly,     {.u8_void = StartMenuFlyCallback}},
     [MENU_ACTION_BAG]             = {gText_MenuBag,     {.u8_void = StartMenuBagCallback}},
@@ -339,14 +343,16 @@ static void BuildNormalStartMenu(void)
     {
         AddStartMenuAction(MENU_ACTION_POKEDEX);
     }
+
     if (FlagGet(FLAG_SYS_POKEMON_GET) == TRUE)
     {
         AddStartMenuAction(MENU_ACTION_POKEMON);
     }
 
-    AddStartMenuAction(MENU_ACTION_HEAL);
+    AddStartMenuAction(MENU_ACTION_PC);
     AddStartMenuAction(MENU_ACTION_FLY);
-
+    //AddStartMenuAction(MENU_ACTION_HEAL);
+    
     AddStartMenuAction(MENU_ACTION_BAG);
 
     if (FlagGet(FLAG_SYS_POKENAV_GET) == TRUE)
@@ -658,6 +664,7 @@ static bool8 HandleStartMenuInput(void)
             && gMenuCallback != StartMenuExitCallback
             && gMenuCallback != StartMenuDebugCallback
             && gMenuCallback != StartMenuHealCallback
+            && gMenuCallback != StartMenuPCCallback
             && gMenuCallback != StartMenuSafariZoneRetireCallback
             && gMenuCallback != StartMenuBattlePyramidRetireCallback)
         {
@@ -718,6 +725,17 @@ static bool8 StartMenuHealCallback(void)
 
     return TRUE;
 }
+
+static bool8 StartMenuPCCallback(void)
+{
+    RemoveExtraStartMenuWindows();
+    HideStartMenu();
+
+    ScriptContext_SetupScript(EventScript_PC);
+
+    return TRUE;
+}
+
 
 static bool8 StartMenuFlyCallback(void)
 {
