@@ -781,23 +781,21 @@ static bool8 ShouldJumpLedge(s16 x, s16 y, u8 direction)
 
 static bool8 TryPushBoulder(s16 x, s16 y, u8 direction)
 {
-    if (FlagGet(FLAG_SYS_USE_STRENGTH))
-    {
-        u8 objectEventId = GetObjectEventIdByXY(x, y);
+    u8 objectEventId = GetObjectEventIdByXY(x, y);
 
-        if (objectEventId != OBJECT_EVENTS_COUNT && gObjectEvents[objectEventId].graphicsId == OBJ_EVENT_GFX_PUSHABLE_BOULDER)
+    if (objectEventId != OBJECT_EVENTS_COUNT && gObjectEvents[objectEventId].graphicsId == OBJ_EVENT_GFX_PUSHABLE_BOULDER)
+    {
+        x = gObjectEvents[objectEventId].currentCoords.x;
+        y = gObjectEvents[objectEventId].currentCoords.y;
+        MoveCoords(direction, &x, &y);
+        if (GetCollisionAtCoords(&gObjectEvents[objectEventId], x, y, direction) == COLLISION_NONE
+            && MetatileBehavior_IsNonAnimDoor(MapGridGetMetatileBehaviorAt(x, y)) == FALSE)
         {
-            x = gObjectEvents[objectEventId].currentCoords.x;
-            y = gObjectEvents[objectEventId].currentCoords.y;
-            MoveCoords(direction, &x, &y);
-            if (GetCollisionAtCoords(&gObjectEvents[objectEventId], x, y, direction) == COLLISION_NONE
-             && MetatileBehavior_IsNonAnimDoor(MapGridGetMetatileBehaviorAt(x, y)) == FALSE)
-            {
-                StartStrengthAnim(objectEventId, direction);
-                return TRUE;
-            }
+            StartStrengthAnim(objectEventId, direction);
+            return TRUE;
         }
     }
+
     return FALSE;
 }
 
