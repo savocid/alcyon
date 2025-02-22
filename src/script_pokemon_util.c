@@ -27,6 +27,7 @@
 #include "constants/abilities.h"
 #include "constants/items.h"
 #include "constants/battle_frontier.h"
+#include "config/alcyon.h"
 
 static void CB2_ReturnFromChooseHalfParty(void);
 static void CB2_ReturnFromChooseBattleFrontierParty(void);
@@ -35,18 +36,18 @@ static void HealPlayerBoxes(void);
 void HealPlayerParty(void)
 {
     u32 i;
-    bool8 allFainted = TRUE;
+    u32 faintedPokemon = 0;
 
     for (i = 0; i < gPlayerPartyCount; i++)
     {
-        if (!GetMonData(&gPlayerParty[i], MON_DATA_HP, NULL) == 0)
-            allFainted = FALSE;
-            break;
+        if (GetMonData(&gPlayerParty[i], MON_DATA_HP, NULL) == 0)
+            faintedPokemon++;
     }
+
     for (i = 0; i < gPlayerPartyCount; i++)
-        if (allFainted || !GetMonData(&gPlayerParty[i], MON_DATA_HP, NULL) == 0)
+        if (A_PERMADEATH && (faintedPokemon == gPlayerPartyCount || !GetMonData(&gPlayerParty[i], MON_DATA_HP, NULL) == 0) || !A_PERMADEATH)
             HealPokemon(&gPlayerParty[i]);
-    if (OW_PC_HEAL >= GEN_8)
+    if (OW_PC_HEAL <= GEN_7)
         HealPlayerBoxes();
 
     // Recharge Tera Orb, if possible.
