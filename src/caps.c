@@ -3,6 +3,7 @@
 #include "event_data.h"
 #include "caps.h"
 #include "pokemon.h"
+#include "pokemon_storage_system.h"
 
 
 u32 GetCurrentLevelCap(void)
@@ -121,15 +122,76 @@ u32 GetCurrentEVCap(void)
 
 void AutomaticLevelCap(void)
 {
-    s32 i;
-    u32 levelCap = GetCurrentLevelCap();
+    u8 levelCap = GetCurrentLevelCap();
 
-    for (i = 0; i < PARTY_SIZE; i++)
+    for (u8 i = 0; i < PARTY_SIZE; i++)
     {
         u16 species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES, NULL);
         u32 expToGive = gExperienceTables[gSpeciesInfo[species].growthRate][levelCap];
 
         SetMonData(&gPlayerParty[i], MON_DATA_EXP, &expToGive);
         CalculateMonStats(&gPlayerParty[i]);
+
+        //TeachLevelUpMovesUntilMax(&gPlayerParty[i]);
+    }
+
+
+
+    for (u8 boxId = 0; boxId < TOTAL_BOXES_COUNT; boxId++)
+    {
+        for (u8 boxPosition = 0; boxPosition < IN_BOX_COUNT; boxPosition++)
+        {
+            u16 species = GetBoxMonData(&gPokemonStoragePtr->boxes[boxId][boxPosition], MON_DATA_SPECIES, NULL);
+            u32 expToGive = gExperienceTables[gSpeciesInfo[species].growthRate][levelCap];
+    
+            SetBoxMonData(&gPokemonStoragePtr->boxes[boxId][boxPosition], MON_DATA_EXP, &expToGive);
+        }
+    }
+
+}
+
+
+void TeachLevelUpMovesUntilMax(struct Pokemon *mon)
+{
+    u16 species = GetMonData(mon, MON_DATA_SPECIES);
+    const struct LevelUpMove *learnset = GetSpeciesLevelUpLearnset(species);
+    u8 currentLevel = GetMonData(mon, MON_DATA_LEVEL);
+    u8 move_1 = GetMonData(mon, MON_DATA_MOVE1);
+    u8 move_2 = GetMonData(mon, MON_DATA_MOVE2);
+    u8 move_3 = GetMonData(mon, MON_DATA_MOVE3);
+    u8 move_4 = GetMonData(mon, MON_DATA_MOVE4);
+
+    u16 currentMoves[MAX_MON_MOVES] = {move_1, move_2, move_3, move_4};
+
+    for (u32 i = 0; learnset[i].move != LEVEL_UP_MOVE_END; i++)
+    {
+        if (learnset[i].level > currentLevel)
+            continue;
+        if (currentMoves[MAX_MON_MOVES-1] != MOVE_NONE)
+            break;
+
+        bool8 alreadyKnowsMove = FALSE;
+        for (u8 j = 0; j < MAX_MON_MOVES; j++)
+        {
+            if (currentMoves[j] == learnset[i].move)
+            {
+                alreadyKnowsMove = TRUE;
+                break;
+            }
+        }
+
+       if (!alreadyKnowsMove)
+       {
+           for (u8 j = 0; j < MAX_MON_MOVES; j++)
+           {
+               if (currentMoves[j] == MOVE_NONE)
+               {
+                   GiveMoveToMon(mon, learnset[i].move);
+                   currentMoves[j] = learnset[i].move;
+                   break;
+               }
+           }
+       }
+
     }
 }
