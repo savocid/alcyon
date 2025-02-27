@@ -11,7 +11,15 @@ script PokemonEncounter_Eventscript {
 
         if (var(VAR_RESULT) == YES)
         {
-            givemon(VAR_0x8005, 5)
+            random(5)
+            switch (var(VAR_RESULT)) {
+                case 0: givemon(VAR_0x8005, 15, , , , 1)
+                case 2: givemon(VAR_0x8005, 15, , , , 1)
+                case 3: givemon(VAR_0x8005, 15, , , , 2)
+                case 4: givemon(VAR_0x8005, 15, , , , 2)
+                case 5: givemon(VAR_0x8005, 15, , , , 3)
+            }
+         
          
             if (var(VAR_RESULT) == MON_GIVEN_TO_PARTY) {
 				playfanfare(MUS_OBTAIN_ITEM)
