@@ -1710,6 +1710,7 @@ void AlcyonInit(void)
     FlagSet(FLAG_SYS_B_DASH);
     FlagSet(FLAG_NO_BAG_USE);
     FlagSet(FLAG_NO_CATCHING);
+    FlagSet(FLAG_SYS_POKEDEX_GET);
     EnableNationalPokedex();
     AlcyonStart();
 }
