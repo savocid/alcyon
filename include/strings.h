@@ -273,7 +273,12 @@ extern const u8 gText_BattleStyle[];
 extern const u8 gText_Sound[];
 extern const u8 gText_Frame[];
 extern const u8 gText_OptionMenuCancel[];
+extern const u8 gText_OptionMenuSave[];
 extern const u8 gText_ButtonMode[];
+extern const u8 gText_Randomize[];
+extern const u8 gText_AlwaysRun[];
+extern const u8 gText_AlwaysRunEnabled[];
+extern const u8 gText_AlwaysRunDisabled[];
 
 extern const u8 gText_MaleSymbol[];
 extern const u8 gText_FemaleSymbol[];
@@ -2690,6 +2695,10 @@ extern const u8 gText_YourName[];
 extern const u8 gText_BoxName[];
 extern const u8 gText_PkmnsNickname[];
 extern const u8 gText_TellHimTheWords[];
+
+// party screen
+extern const u8 gText_Evolution[];
+extern const u8 gText_PartyRelearn[];
 
 // Exp. Share
 extern const u8 gText_ExpShareOn[];

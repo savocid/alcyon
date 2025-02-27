@@ -1251,7 +1251,12 @@ const u8 gText_BattleScene[] = _("BATTLE SCENE");
 const u8 gText_BattleStyle[] = _("BATTLE STYLE");
 const u8 gText_Sound[] = _("SOUND");
 const u8 gText_Frame[] = _("FRAME");
+const u8 gText_AlwaysRun[] = _("ALWAYS RUN");
+const u8 gText_AlwaysRunEnabled[] = _("{COLOR GREEN}{SHADOW LIGHT_GREEN}ON");
+const u8 gText_AlwaysRunDisabled[] = _("{COLOR GREEN}{SHADOW LIGHT_GREEN}OFF");
+const u8 gText_Randomize[] = _("GENERATE NEW SEED");
 const u8 gText_OptionMenuCancel[] = _("CANCEL");
+const u8 gText_OptionMenuSave[] = _("SAVE");
 const u8 gText_ButtonMode[] = _("BUTTON MODE");
 const u8 gText_TextSpeedSlow[] = _("{COLOR GREEN}{SHADOW LIGHT_GREEN}SLOW");
 const u8 gText_TextSpeedMid[] = _("{COLOR GREEN}{SHADOW LIGHT_GREEN}MID");
@@ -1569,3 +1574,8 @@ const u8 gText_AM[] = _("AM");
 const u8 gText_PM[] = _("PM");
 const u8 gText_Relearn[] = _("{START_BUTTON} RELEARN"); // future note: don't decap this, because it mimics the summary screen BG graphics which will not get decapped
 const u8 gText_Rename[] = _("RENAME");
+
+// party screen option
+const u8 gText_Evolution[] = _("{COLOR GREEN}EVOLVE");
+
+const u8 gText_PartyRelearn[] = _("RELEARN");
