@@ -46,6 +46,7 @@ bool8 FieldCallback_PrepareFadeInFromMenu(void);
 bool8 FieldCallback_PrepareFadeInForTeleport(void);
 void CB2_ReturnToPartyMenuFromFlyMap(void);
 void LoadHeldItemIcons(void);
+void LoadEvolutionIcon(void);
 void DrawHeldItemIconsForTrade(u8 *partyCounts, u8 *partySpriteIds, u8 whichParty);
 void LoadPartyMenuAilmentGfx(void);
 void CB2_ShowPartyMenuForItemUse(void);
@@ -102,5 +103,6 @@ void MoveDeleterForgetMove(void);
 void BufferMoveDeleterNicknameAndMove(void);
 void GetNumMovesSelectedMonHas(void);
 void MoveDeleterChooseMoveToForget(void);
+void CB2_ReturnToPartyMenuFromSummaryScreen(void);
 
 #endif // GUARD_PARTY_MENU_H
