@@ -7973,7 +7973,11 @@ static void CreatePartyMonEvolutionSprite(struct Pokemon *mon, struct PartyMenuB
 static void UpdatePartyMonEvolutionSprites(void)
 {
     for (u8 i = 0; i < PARTY_SIZE; i++) {
-        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) != SPECIES_NONE)
+        if (gMain.inBattle)
+        {
+            gSprites[sPartyMenuBoxes[i].evolutionSpriteId].invisible = TRUE;
+        }
+        else if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) != SPECIES_NONE)
         {
             u16 evolution = GetEvolutionTargetSpecies(&gPlayerParty[i], EVO_MODE_NORMAL, ITEM_NONE, NULL);
             gSprites[sPartyMenuBoxes[i].evolutionSpriteId].invisible = evolution == SPECIES_NONE;
