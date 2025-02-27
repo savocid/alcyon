@@ -49,6 +49,7 @@
 #include "constants/trainers.h"
 #include "constants/weather.h"
 #include "constants/pokemon.h"
+#include "alcyon.h"
 
 /*
 NOTE: The data and functions in this file up until (but not including) sSoundMovesTable
@@ -8492,6 +8493,9 @@ u8 GetAttackerObedienceForAction()
     s32 calc;
     u8 obedienceLevel = 0;
     u8 levelReferenced;
+
+    if (A_ALWAYS_OBEY)
+        return OBEYS;
 
     if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
         return OBEYS;

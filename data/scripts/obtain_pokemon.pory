@@ -1,0 +1,57 @@
+script PokemonEncounter_Eventscript {
+	lockall
+
+    special(randomPokemonGift_SetVar)
+
+    if (var(VAR_RESULT))
+    {
+        showmonpic(VAR_0x8005, 10, 3)
+        bufferspeciesname(STR_VAR_1, VAR_0x8005)
+        msgbox(format("You found a {STR_VAR_1}!\nWould you like to keep it?"), MSGBOX_YESNO)
+
+        if (var(VAR_RESULT) == YES)
+        {
+            givemon(VAR_0x8005, 5)
+         
+            if (var(VAR_RESULT) == MON_GIVEN_TO_PARTY) {
+				playfanfare(MUS_OBTAIN_ITEM)
+				hidemonpic
+                removeobject(VAR_LAST_TALKED)
+				msgbox(format("Would you like to give {STR_VAR_1} a nickname?"), MSGBOX_YESNO)
+				if(var(VAR_RESULT) == YES) {
+					call(Common_EventScript_GetGiftMonPartySlot)
+					call(Common_EventScript_NameReceivedPartyMon)
+				}
+			}
+			elif (var(VAR_RESULT) == MON_GIVEN_TO_PC) {
+				playfanfare(MUS_OBTAIN_ITEM)
+				hidemonpic
+                removeobject(VAR_LAST_TALKED)
+				msgbox(format("Would you like to give {STR_VAR_1} a nickname?"), MSGBOX_YESNO)
+				if(var(VAR_RESULT) == YES) {
+					call(Common_EventScript_NameReceivedBoxMon)
+				}
+				msgbox(format("{STR_VAR_1} was transferred to the PC."))
+			}
+			else {
+				hidemonpic
+				msgbox(format("Your PC is Full!"))
+			}
+        }
+        else
+        {
+            hidemonpic
+        }
+
+        special(AutomaticLevelCap)
+    }
+    else
+    {
+        msgbox(format("Error occurred."))
+    }
+
+	waitmessage
+	releaseall
+    end
+}
+

@@ -38,6 +38,7 @@
 #include "title_screen.h"
 #include "window.h"
 #include "mystery_gift_menu.h"
+#include "alcyon.h"
 
 /*
  * Main menu state machine
@@ -628,6 +629,8 @@ static u32 InitMainMenu(bool8 returningFromOptionsMenu)
     ShowBg(0);
     HideBg(1);
     CreateTask(Task_MainMenuCheckSaveFile, 0);
+
+    AlcyonStart();
 
     return 0;
 }

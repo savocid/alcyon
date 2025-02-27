@@ -339,11 +339,6 @@ static void AddStartMenuAction(u8 action)
 
 static void BuildNormalStartMenu(void)
 {
-    if (FlagGet(FLAG_SYS_POKEDEX_GET) == TRUE)
-    {
-        AddStartMenuAction(MENU_ACTION_POKEDEX);
-    }
-
     if (FlagGet(FLAG_SYS_POKEMON_GET) == TRUE)
     {
         AddStartMenuAction(MENU_ACTION_POKEMON);
@@ -354,6 +349,11 @@ static void BuildNormalStartMenu(void)
     //AddStartMenuAction(MENU_ACTION_HEAL);
     
     AddStartMenuAction(MENU_ACTION_BAG);
+
+    if (FlagGet(FLAG_SYS_POKEDEX_GET) == TRUE)
+    {
+        AddStartMenuAction(MENU_ACTION_POKEDEX);
+    }
 
     if (FlagGet(FLAG_SYS_POKENAV_GET) == TRUE)
     {
