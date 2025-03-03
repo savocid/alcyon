@@ -1,13 +1,10 @@
 #ifndef GUARD_ALCYON_H
 #define GUARD_ALCYON_H
 
-// Alcyon config
-#define A_PARTYMON_FIELDMOVE   FALSE           // If TRUE, the player's Pokémon can use field moves from party menu.
-#define A_PERMADEATH           TRUE            // If TRUE, the player's Pokémon cannot be healed when fainted (Whiteout will still heal the player's party).
-#define A_ALWAYS_OBEY          TRUE            // If TRUE, the player's Pokémon will always obey regardless of level.
-
 #define MAX_RANDOM_LIST_SIZE 100
 #define MAX_EXCLUSION_LIST_SIZE 100
+
+#define OBJECTID_UNDEFINED 0xFF
 
 #define BST_UNDEFINED 0xFFF
 #define EVO_UNDEFINED 0xFF
@@ -18,14 +15,18 @@
 
 #define ALLOW_ALL 0
 #define ALLOW_LEGENDARY 1
-#define ALLOW_BANNED 2
-#define ALLOW_MEGA 3
-#define ALLOW_PRIMAL 4
-#define ALLOW_ULTRABEAST 5
-#define ALLOW_GIGANTAMAX 6
-#define ALLOW_TERA 7
-#define ALLOW_REGIONAL 8
-#define ALLOW_COUNT 9
+#define ALLOW_MYTHICAL 2
+#define ALLOW_PSEUDO 3
+#define ALLOW_BANNED 4
+#define ALLOW_MEGA 5
+#define ALLOW_PRIMAL 6
+#define ALLOW_ULTRABEAST 7
+#define ALLOW_TOTEM 8
+#define ALLOW_PARADOX 9
+#define ALLOW_GIGANTAMAX 10
+#define ALLOW_TERA 11
+#define ALLOW_REGIONAL 12
+#define ALLOW_COUNT 13
 
 #define EVO_SPECIES_STAGE_0 0
 #define EVO_SPECIES_STAGE_1 1
@@ -100,8 +101,9 @@ struct RandomList
 
 void AlcyonInit(void);
 void AlcyonStart(void);
-void randomPokemonGift_SetVar(void);
+void RandomPokemonGift_SetVar(void);
+void RandomPokemonGift_RemoveObjects(void);
+//void RandomPokemonGift_SetSprites();
 u16 getRandomPokemonByArea(s8 mapNum, s8 mapGroup, u8 objectId);
-u16 getObjectFlagByArea(s8 mapNum, s8 mapGroup, u8 objectId);
 
 #endif // GUARD_ALCYON_H
