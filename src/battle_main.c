@@ -433,9 +433,6 @@ const u8 *const gStatusConditionStringsTable[][2] =
 void CB2_InitBattle(void)
 {
 
-    if (B_LEVEL_CAP_AUTO && (B_LEVEL_CAP_TYPE == LEVEL_CAP_FLAG_LIST || B_LEVEL_CAP_TYPE == LEVEL_CAP_VARIABLE))
-        AutomaticLevelCap();
-
     if (!gTestRunnerEnabled)
         MoveSaveBlocks_ResetHeap();
     AllocateBattleResources();
@@ -5648,9 +5645,6 @@ static void HandleEndTurn_FinishBattle(void)
         if (gBattleControllerExecFlags == 0)
             gBattleScriptingCommandsTable[gBattlescriptCurrInstr[0]]();
     }
-
-    if (B_LEVEL_CAP_AUTO && (B_LEVEL_CAP_TYPE == LEVEL_CAP_FLAG_LIST || B_LEVEL_CAP_TYPE == LEVEL_CAP_VARIABLE))
-        AutomaticLevelCap();
 }
 
 static void FreeResetData_ReturnToOvOrDoEvolutions(void)
