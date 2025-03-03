@@ -13,6 +13,10 @@
 #include "gba/gba.h"
 #include "wild_encounter.h"
 #include "pokedex.h"
+#include "event_object_movement.h"
+#include "overworld.h"
+#include "constants/event_objects.h"
+#include "event_scripts.h"
 
 static const struct SpeciesEvoData sSpeciesEvolutionStage[NUM_SPECIES + 1] =
 {
@@ -1602,43 +1606,42 @@ static const struct SpeciesEvoData sSpeciesEvolutionStage[NUM_SPECIES + 1] =
 
 
 static const MapAreaEntry sMapAreaRandomPokemonAttributes[] __attribute__((used)) = {
-    {MAP_GROUP(ROUTE101), MAP_NUM(ROUTE101), 7, {
+    {MAP_GROUP(ROUTE101), MAP_NUM(ROUTE101), OBJECTID_UNDEFINED, {
         .Active = TRUE,
-        .BST_Min = BST_MIN_LEVEL_1,
-        .BST_Max = BST_MAX_LEVEL_1,
+        .BST_Min = BST_MIN_LEVEL_8,
+        .BST_Max = BST_MAX_LEVEL_9,
         .Type_1 = { TYPE_END },
         .Type_2 = { TYPE_END },
-        .Allow = { ALLOW_END, },
+        .Allow = { ALLOW_PSEUDO, ALLOW_END },
         .Exclusion = { SPECIES_SHEDINJA, EXCLUSION_END },
         .Evolution_Species_Stage = EVO_UNDEFINED,
         .Evolution_Family_Stage = EVO_UNDEFINED,
-        .Object_Flag = FLAG_UNUSED_0x495,
     }},
-    {MAP_GROUP(ROUTE101), MAP_NUM(ROUTE101), 8, {
-        .Active = TRUE,
-        .BST_Min = BST_MIN_LEVEL_2,
-        .BST_Max = BST_MAX_LEVEL_2,
-        .Type_1 = { TYPE_END },
-        .Type_2 = { TYPE_END },
-        .Allow = { ALLOW_END, },
-        .Exclusion = { SPECIES_SHEDINJA, EXCLUSION_END },
-        .Evolution_Species_Stage = EVO_UNDEFINED,
-        .Evolution_Family_Stage = EVO_UNDEFINED,
-        .Object_Flag = FLAG_UNUSED_0x497,
-    }},
-    {MAP_GROUP(ROUTE102), MAP_NUM(ROUTE102), 10, {
+    {MAP_GROUP(ROUTE102), MAP_NUM(ROUTE102), OBJECTID_UNDEFINED, {
         .Active = TRUE,
         .BST_Min = BST_MIN_LEVEL_3,
         .BST_Max = BST_MAX_LEVEL_3,
         .Type_1 = { TYPE_END },
         .Type_2 = { TYPE_END },
-        .Allow = { ALLOW_END, },
+        .Allow = { ALLOW_END },
         .Exclusion = { SPECIES_SHEDINJA, EXCLUSION_END },
         .Evolution_Species_Stage = EVO_UNDEFINED,
         .Evolution_Family_Stage = EVO_UNDEFINED,
-        .Object_Flag = FLAG_UNUSED_0x496,
     }},
-    {MAP_GROUP(ROUTE103), MAP_NUM(ROUTE103), 21, {
+    {MAP_GROUP(ROUTE103), MAP_NUM(ROUTE103), OBJECTID_UNDEFINED, {
+        .Active = TRUE,
+        .BST_Min = BST_MIN_LEVEL_4,
+        .BST_Max = BST_MAX_LEVEL_4,
+        .Type_1 = { TYPE_END },
+        .Type_2 = { TYPE_END },
+        .Exclusion = { SPECIES_SHEDINJA, EXCLUSION_END },
+        .Allow = { ALLOW_END },
+        .Evolution_Species_Stage = EVO_UNDEFINED,
+        .Evolution_Family_Stage = EVO_UNDEFINED,
+    }},
+
+    /* // Example Usage
+    {MAP_GROUP(ROUTE101), MAP_NUM(ROUTE101), OBJECTID_UNDEFINED, {
         .Active = TRUE,
         .BST_Min = BST_MIN_LEVEL_4,
         .BST_Max = BST_MAX_LEVEL_4,
@@ -1648,21 +1651,48 @@ static const MapAreaEntry sMapAreaRandomPokemonAttributes[] __attribute__((used)
         .Allow = { ALLOW_END, },
         .Evolution_Species_Stage = EVO_UNDEFINED,
         .Evolution_Family_Stage = EVO_UNDEFINED,
-        .Object_Flag = FLAG_UNUSED_0x496,
     }},
+    */
 
 };
 
 
-const MapAreaAttributes* getMapAreaAttributes(s8 mapGroup, s8 mapNum, u8 objectId) {
-    for (size_t i = 0; i < sizeof(sMapAreaRandomPokemonAttributes) / sizeof(MapAreaEntry); i++) {
-        if (sMapAreaRandomPokemonAttributes[i].mapGroup == mapGroup &&
-            sMapAreaRandomPokemonAttributes[i].mapNum == mapNum &&
-            sMapAreaRandomPokemonAttributes[i].objectId == objectId) {
+const MapAreaAttributes* getMapAreaAttributes(s8 mapNum, s8 mapGroup, u8 objectId) {
+
+    u16 i;
+    for (i = 0; i < sizeof(sMapAreaRandomPokemonAttributes) / sizeof(MapAreaEntry); i++) {
+        if (
+            sMapAreaRandomPokemonAttributes[i].mapGroup == mapGroup
+            && sMapAreaRandomPokemonAttributes[i].mapNum == mapNum
+            && (sMapAreaRandomPokemonAttributes[i].objectId == OBJECTID_UNDEFINED || sMapAreaRandomPokemonAttributes[i].objectId == objectId)
+        ) {
             return &sMapAreaRandomPokemonAttributes[i].attributes;
         }
     }
+    
     return 0;
+}
+
+
+
+// ran on new game
+void AlcyonInit(void)
+{
+    FlagSet(FLAG_RECEIVED_RUNNING_SHOES);
+    FlagSet(FLAG_SYS_B_DASH);
+    FlagSet(FLAG_NO_BAG_USE);
+    FlagSet(FLAG_NO_CATCHING);
+    //FlagSet(FLAG_SYS_POKEDEX_GET);
+    EnableNationalPokedex();
+    AlcyonStart();
+}
+
+// ran on game startup
+void AlcyonStart(void)
+{
+    SetPartyToLevelCap();
+    SetBoxToLevelCap();
+    DisableWildEncounters(TRUE);
 }
 
 
@@ -1704,23 +1734,41 @@ bool8 IsSpeciesAllowed(u8 condition, const u8 *allow)
 }
 
 
-void AlcyonInit(void)
-{
-    FlagSet(FLAG_RECEIVED_RUNNING_SHOES);
-    FlagSet(FLAG_SYS_B_DASH);
-    FlagSet(FLAG_NO_BAG_USE);
-    FlagSet(FLAG_NO_CATCHING);
-    FlagSet(FLAG_SYS_POKEDEX_GET);
-    EnableNationalPokedex();
-    AlcyonStart();
-}
 
-void AlcyonStart(void)
-{
-    DisableWildEncounters(TRUE);
-}
 
-void randomPokemonGift_SetVar(void)
+
+/*void RandomPokemonGift_SetSprites(void)
+{
+    u16 t, i;
+    for (t = 0; t < sizeof(sMapAreaRandomPokemonAttributes) / sizeof(MapAreaEntry); t++)
+    {
+        s8 mapNum = sMapAreaRandomPokemonAttributes[t].mapNum;
+        s8 mapGroup = sMapAreaRandomPokemonAttributes[t].mapGroup;
+        u8 objectId = sMapAreaRandomPokemonAttributes[t].objectId;
+
+        if (mapNum != gSaveBlock1Ptr->location.mapNum || mapGroup != gSaveBlock1Ptr->location.mapGroup)
+            continue;
+    
+        struct ObjectEventTemplate *savObjTemplates = gSaveBlock1Ptr->objectEventTemplates;
+        for (i = 0; i < OBJECT_EVENT_TEMPLATES_COUNT; i++)
+        {
+            struct ObjectEventTemplate *objectEventTemplate = &savObjTemplates[i];
+
+            if (objectId != OBJECTID_UNDEFINED && objectId != objectEventTemplate->localId)
+                continue;
+
+            if (objectEventTemplate->graphicsId == OBJ_EVENT_GFX_VAR_0)
+            {
+                const u32 species = getRandomPokemonByArea(mapNum, mapGroup, objectEventTemplate->localId);
+                const u16 graphicsId = GetGraphicsIdForMon(species, 0, 0);
+                objectEventTemplate->graphicsId = graphicsId != SPECIES_NONE ? graphicsId : OBJ_EVENT_GFX_MOVING_BOX;
+            }
+        }
+    }
+}*/
+
+
+void RandomPokemonGift_SetVar(void)
 {
     VarSet(VAR_RESULT, 1);
 
@@ -1739,21 +1787,37 @@ void randomPokemonGift_SetVar(void)
     }
     VarSet(VAR_0x8005, species_var);
 
-    u16 object_flag = getObjectFlagByArea(gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, objectId);
-    if (!object_flag)
-    {
-        VarSet(VAR_RESULT, 0);
-        return;
-    }
+
+    u16 object_flag = GetObjectEventFlagIdByLocalIdAndMap(objectId,gSaveBlock1Ptr->location.mapNum,gSaveBlock1Ptr->location.mapGroup);
     VarSet(VAR_0x8006, object_flag);
 }
+
+void RandomPokemonGift_RemoveObjects(void)
+{
+    s8 mapNum = gSaveBlock1Ptr->location.mapNum;
+    s8 mapGroup = gSaveBlock1Ptr->location.mapGroup;
+    u8 objectId = VarGet(VAR_LAST_TALKED);
+    u16 flagId = GetObjectEventFlagIdByLocalIdAndMap(objectId,mapNum,mapGroup);
+
+    
+    const struct ObjectEventTemplate *templates = gSaveBlock1Ptr->objectEventTemplates;
+    u8 count = gMapHeader.events->objectEventCount;
+
+    for (u8 i = 0; i < count; i++)
+    {
+        if (templates[i].flagId == flagId)
+            RemoveObjectEventByLocalIdAndMap(templates[i].localId, mapNum, mapGroup);
+    }
+}
+
+
 
 u16 getRandomPokemonByArea(s8 mapNum, s8 mapGroup, u8 objectId)
 {
     u16 random_list_count = 0;
     struct RandomList random_list[MAX_RANDOM_LIST_SIZE];
 
-    const MapAreaAttributes *attributes = getMapAreaAttributes(mapGroup, mapNum, objectId);
+    const MapAreaAttributes *attributes = getMapAreaAttributes(mapNum, mapGroup, objectId);
 
     if (!attributes || !attributes->Active)
     {
@@ -1771,6 +1835,8 @@ u16 getRandomPokemonByArea(s8 mapNum, s8 mapGroup, u8 objectId)
     u8 evo_family_stage = attributes->Evolution_Family_Stage;
     const u8 *allow = attributes->Allow;
 
+    
+
     for (u16 i = 0; i < NUM_SPECIES; i++)
     {
         if (
@@ -1782,10 +1848,24 @@ u16 getRandomPokemonByArea(s8 mapNum, s8 mapGroup, u8 objectId)
         {
             continue;
         }
+
+        u16 mon_bst = gSpeciesInfo[i].baseHP
+        + gSpeciesInfo[i].baseAttack
+        + gSpeciesInfo[i].baseDefense
+        + gSpeciesInfo[i].baseSpeed
+        + gSpeciesInfo[i].baseSpAttack
+        + gSpeciesInfo[i].baseSpDefense;
+
+        const bool8 isPseudoLegendary = mon_bst == 600 && sSpeciesEvolutionStage[i].evo_family_stage == EVO_FAMILY_STAGE_3 && sSpeciesEvolutionStage[i].evo_species_stage == EVO_SPECIES_STAGE_3 && gSpeciesInfo[i].growthRate == GROWTH_SLOW;
+
         if (
-   
+            !IsSpeciesAllowed(ALLOW_ALL, allow) &&
             ((gSpeciesInfo[i].isLegendary
                 && !IsSpeciesAllowed(ALLOW_LEGENDARY, allow)) ||
+            (gSpeciesInfo[i].isMythical
+                && !IsSpeciesAllowed(ALLOW_MYTHICAL, allow)) ||
+            (isPseudoLegendary
+                && !IsSpeciesAllowed(ALLOW_PSEUDO, allow)) ||
             (gSpeciesInfo[i].isFrontierBanned
                 && !IsSpeciesAllowed(ALLOW_BANNED, allow)) ||
             (gSpeciesInfo[i].isMegaEvolution
@@ -1794,24 +1874,21 @@ u16 getRandomPokemonByArea(s8 mapNum, s8 mapGroup, u8 objectId)
                 && !IsSpeciesAllowed(ALLOW_PRIMAL, allow)) ||
             (gSpeciesInfo[i].isUltraBeast
                 && !IsSpeciesAllowed(ALLOW_ULTRABEAST, allow)) ||
+            (gSpeciesInfo[i].isTotem
+                && !IsSpeciesAllowed(ALLOW_TOTEM, allow)) ||
             (gSpeciesInfo[i].isGigantamax
                 && !IsSpeciesAllowed(ALLOW_GIGANTAMAX, allow)) ||
+            (gSpeciesInfo[i].isParadox
+                && !IsSpeciesAllowed(ALLOW_PARADOX, allow)) ||
             (gSpeciesInfo[i].isTeraForm
                 && !IsSpeciesAllowed(ALLOW_TERA, allow)) ||
             ((gSpeciesInfo[i].isAlolanForm || gSpeciesInfo[i].isGalarianForm || gSpeciesInfo[i].isHisuianForm || gSpeciesInfo[i].isPaldeanForm)
-                && !IsSpeciesAllowed(ALLOW_REGIONAL, allow))) &&
-            !IsSpeciesAllowed(ALLOW_ALL, allow)
+                && !IsSpeciesAllowed(ALLOW_REGIONAL, allow)))
         )
         {
             continue;
         }
 
-        u16 mon_bst = gSpeciesInfo[i].baseHP
-                    + gSpeciesInfo[i].baseAttack
-                    + gSpeciesInfo[i].baseDefense
-                    + gSpeciesInfo[i].baseSpeed
-                    + gSpeciesInfo[i].baseSpAttack
-                    + gSpeciesInfo[i].baseSpDefense;
 
         u8 mon_type_1 = gSpeciesInfo[i].types[0];
         u8 mon_type_2 = gSpeciesInfo[i].types[1];
@@ -1858,7 +1935,7 @@ u16 getRandomPokemonByArea(s8 mapNum, s8 mapGroup, u8 objectId)
     }
 
     u32 trainerId = GetTrainerId(gSaveBlock2Ptr->playerTrainerId);
-    u32 seed = ISO_RANDOMIZE1(trainerId+mapGroup+mapNum+(objectId*trainerId));
+    u32 seed = ISO_RANDOMIZE1(trainerId+(mapGroup*trainerId)+(mapNum*trainerId)+(objectId*trainerId));
     u32 index = seed % random_list_count;
 
     //struct RandomList result = random_list[Random() % random_list_count];
@@ -1872,15 +1949,3 @@ u16 getRandomPokemonByArea(s8 mapNum, s8 mapGroup, u8 objectId)
     return result.id;
 }
 
-
-u16 getObjectFlagByArea(s8 mapNum, s8 mapGroup, u8 objectId)
-{
-    const MapAreaAttributes *attributes = getMapAreaAttributes(mapGroup, mapNum, objectId);
-    
-    if (!attributes || !attributes->Active)
-    {
-        return 0;
-    }
-
-    return attributes->Object_Flag;
-}

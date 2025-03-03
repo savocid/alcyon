@@ -1,7 +1,7 @@
-script PokemonEncounter_Eventscript {
+script Eventscript_RandomPokemonGift {
 	lockall
 
-    special(randomPokemonGift_SetVar)
+    special(RandomPokemonGift_SetVar)
 
     if (var(VAR_RESULT))
     {
@@ -11,35 +11,29 @@ script PokemonEncounter_Eventscript {
 
         if (var(VAR_RESULT) == YES)
         {
-            random(5)
-            switch (var(VAR_RESULT)) {
-                case 0: givemon(VAR_0x8005, 15, , , , 1)
-                case 2: givemon(VAR_0x8005, 15, , , , 1)
-                case 3: givemon(VAR_0x8005, 15, , , , 2)
-                case 4: givemon(VAR_0x8005, 15, , , , 2)
-                case 5: givemon(VAR_0x8005, 15, , , , 3)
-            }
-         
+            givemon(VAR_0x8005, 15)
          
             if (var(VAR_RESULT) == MON_GIVEN_TO_PARTY) {
 				playfanfare(MUS_OBTAIN_ITEM)
 				hidemonpic
-                removeobject(VAR_LAST_TALKED)
+                special(RandomPokemonGift_RemoveObjects)
 				msgbox(format("Would you like to give {STR_VAR_1} a nickname?"), MSGBOX_YESNO)
 				if(var(VAR_RESULT) == YES) {
 					call(Common_EventScript_GetGiftMonPartySlot)
 					call(Common_EventScript_NameReceivedPartyMon)
 				}
+                special(SetPartyToLevelCap)
 			}
 			elif (var(VAR_RESULT) == MON_GIVEN_TO_PC) {
 				playfanfare(MUS_OBTAIN_ITEM)
 				hidemonpic
-                removeobject(VAR_LAST_TALKED)
+                special(RandomPokemonGift_RemoveObjects)
 				msgbox(format("Would you like to give {STR_VAR_1} a nickname?"), MSGBOX_YESNO)
 				if(var(VAR_RESULT) == YES) {
 					call(Common_EventScript_NameReceivedBoxMon)
 				}
 				msgbox(format("{STR_VAR_1} was transferred to the PC."))
+                special(SetBoxToLevelCap)
 			}
 			else {
 				hidemonpic
@@ -50,8 +44,6 @@ script PokemonEncounter_Eventscript {
         {
             hidemonpic
         }
-
-        special(AutomaticLevelCap)
     }
     else
     {
