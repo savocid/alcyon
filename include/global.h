@@ -19,6 +19,7 @@
 #include "constants/trainer_hill.h"
 #include "constants/items.h"
 #include "config/save.h"
+#include "constants/item.h"
 
 // Prevent cross-jump optimization.
 #define BLOCK_CROSS_JUMP asm("");
@@ -1033,6 +1034,27 @@ struct SaveBlock1
     /*0x650*/ struct ItemSlot bagPocket_PokeBalls[BAG_POKEBALLS_COUNT];
     /*0x690*/ struct ItemSlot bagPocket_TMHM[BAG_TMHM_COUNT];
     /*0x790*/ struct ItemSlot bagPocket_Berries[BAG_BERRIES_COUNT];
+#if POCKET_MEDICINE != DEFAULT_MEDICINE_POCKET
+    struct ItemSlot bagPocket_Medicine[BAG_MEDICINE_COUNT];
+#endif
+#if POCKET_BATTLE_ITEMS != DEFAULT_BATTLE_ITEMS_POCKET
+    struct ItemSlot bagPocket_BattleItems[BAG_BATTLEITEMS_COUNT];
+#endif
+#if POCKET_POWER_UP != DEFAULT_POWER_UP_POCKET
+    struct ItemSlot bagPocket_PowerUp[BAG_POWERUP_COUNT];
+#endif
+#if POCKET_TREASURES != DEFAULT_TREASURES_POCKET
+    struct ItemSlot bagPocket_Treasures[BAG_TREASURES_COUNT];
+#endif
+#if POCKET_MAIL != DEFAULT_MAIL_POCKET
+    struct ItemSlot bagPocket_Mail[BAG_MAIL_COUNT];
+#endif
+#if POCKET_MEGA_STONES != DEFAULT_MEGA_STONES_POCKET
+    struct ItemSlot bagPocket_MegaStones[BAG_MEGASTONES_COUNT];
+#endif
+#if POCKET_Z_CRYSTALS != DEFAULT_Z_CRYSTALS_POCKET
+    struct ItemSlot bagPocket_ZCrystals[BAG_ZCRYSTALS_COUNT];
+#endif
     /*0x848*/ struct Pokeblock pokeblocks[POKEBLOCKS_COUNT];
 #if FREE_EXTRA_SEEN_FLAGS_SAVEBLOCK1 == FALSE
     /*0x988*/ u8 filler1[0x34]; // Previously Dex Flags, feel free to remove.
