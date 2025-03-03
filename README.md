@@ -9,7 +9,7 @@
 
   ![1](https://github.com/user-attachments/assets/4f448940-4b01-4a0d-adda-6fd8f57c8f24)
   ![2](https://github.com/user-attachments/assets/b72269a5-fd0e-4b55-838d-2742e0b7de07)
-- Additional Bag Pockets (ITEMS / *MEDICINE* / POKé BALLS / TMs & HMs / *POWER UP* / BERRIES / *TREASURES* / KEY ITEMS)
+- Additional Bag Pockets (ITEMS / **MEDICINE** / POKé BALLS / TMs & HMs / **POWER UP** / BERRIES / **TREASURES** / KEY ITEMS)
 
   ![3](https://github.com/user-attachments/assets/dc76a879-fb2f-4781-8dc9-8714c1095a38)
 - Bag sort option.
