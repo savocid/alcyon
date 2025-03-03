@@ -21,5 +21,5 @@
 - Can always use HM Field effects in the overworld (Surf / Strength / Cut / Waterfall / Dive).
 - Animation skip for HM Field effects (the popup only) and overall faster initialization (no dialog etc).
 
-https://github.com/user-attachments/assets/1c72ec69-c1e8-448e-9b93-e1596557c27b
+![6](https://github.com/user-attachments/assets/aefed652-054a-4b0d-9757-116ec0227ecf)
 
