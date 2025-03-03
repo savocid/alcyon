@@ -49,7 +49,7 @@
 #include "constants/trainers.h"
 #include "constants/weather.h"
 #include "constants/pokemon.h"
-#include "alcyon.h"
+#include "config/alcyon.h"
 
 /*
 NOTE: The data and functions in this file up until (but not including) sSoundMovesTable
