@@ -554,5 +554,7 @@ gSpecials::
 	def_special Script_GetChosenMonOffensiveIVs
 	def_special Script_GetChosenMonDefensiveIVs
 	def_special UseBlankMessageToCancelPokemonPic
-	def_special randomPokemonGift_SetVar
-	def_special AutomaticLevelCap
+	def_special RandomPokemonGift_SetVar
+	def_special RandomPokemonGift_RemoveObjects
+	def_special SetPartyToLevelCap
+	def_special SetBoxToLevelCap
