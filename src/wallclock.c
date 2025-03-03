@@ -692,13 +692,7 @@ void CB2_StartWallClock(void)
     LZ77UnCompVram(gWallClockStart_Tilemap, (u16 *)BG_SCREEN_ADDR(7));
 
     taskId = CreateTask(Task_SetClock_WaitFadeIn, 0);
-    gTasks[taskId].tHours = 10;
-    gTasks[taskId].tMinutes = 0;
-    gTasks[taskId].tMoveDir = 0;
-    gTasks[taskId].tPeriod = 0;
-    gTasks[taskId].tMoveSpeed = 0;
-    gTasks[taskId].tMinuteHandAngle = 0;
-    gTasks[taskId].tHourHandAngle = 300;
+    InitClockWithRtc(taskId);
 
     spriteId = CreateSprite(&sSpriteTemplate_MinuteHand, 120, 80, 1);
     gSprites[spriteId].sTaskId = taskId;
@@ -804,6 +798,10 @@ static void Task_SetClock_HandleInput(u8 taskId)
         {
             gTasks[taskId].func = Task_SetClock_AskConfirm;
         }
+        else if (JOY_NEW(B_BUTTON))
+        {
+            gTasks[taskId].func = Task_SetClock_Exit;
+        }
         else
         {
             gTasks[taskId].tMoveDir = MOVE_NONE;
@@ -862,6 +860,7 @@ static void Task_SetClock_Confirmed(u8 taskId)
 {
     RtcInitLocalTimeOffset(gTasks[taskId].tHours, gTasks[taskId].tMinutes);
     BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
+    PlaySE(SE_SAVE);
     gTasks[taskId].func = Task_SetClock_Exit;
 }
 

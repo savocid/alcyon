@@ -19,6 +19,10 @@
 #include "constants/songs.h"
 #include "random.h"
 #include "new_game.h"
+#include "wallclock.h"
+#include "overworld.h"
+#include "rtc.h"
+#include "event_data.h"
 
 #define tMenuSelection data[0]
 #define tTextSpeed data[1]
@@ -40,6 +44,7 @@ enum
     MENUITEM_FRAMETYPE,
     MENUITEM_ALWAYSRUN,
     MENUITEM_RANDOMIZE,
+    MENUITEM_SETTIME,
     MENUITEM_CANCEL,
     MENUITEM_SAVE,
     MENUITEM_COUNT,
@@ -70,6 +75,7 @@ typedef struct {
 #define YPOS_BUTTONMODE   GetAdjustedYPos(MENUITEM_BUTTONMODE)
 #define YPOS_FRAMETYPE    GetAdjustedYPos(MENUITEM_FRAMETYPE)
 #define YPOS_RANDOMIZE    GetAdjustedYPos(MENUITEM_RANDOMIZE)
+#define YPOS_SETTIME      GetAdjustedYPos(MENUITEM_SETTIME)
 #define YPOS_ALWAYSRUN    GetAdjustedYPos(MENUITEM_ALWAYSRUN)
 
 static void Task_OptionMenuFadeIn(u8 taskId);
@@ -116,6 +122,7 @@ static const MenuItem sOptionMenuItems[MENUITEM_COUNT] =
     [MENUITEM_FRAMETYPE]   = { gText_Frame,            MENUITEM_ENABLED  },
     [MENUITEM_ALWAYSRUN]   = { gText_AlwaysRun,        MENUITEM_ENABLED  },
     [MENUITEM_RANDOMIZE]   = { gText_Randomize,        MENUITEM_ENABLED  },
+    [MENUITEM_SETTIME]     = { gText_SetTime,        MENUITEM_ENABLED  },
     [MENUITEM_CANCEL]      = { gText_OptionMenuCancel, MENUITEM_DISABLED },
     [MENUITEM_SAVE]        = { gText_OptionMenuSave,   MENUITEM_ENABLED },
 };
@@ -309,6 +316,11 @@ static void Task_OptionMenuProcessInput(u8 taskId)
             GenerateNewPlayerID();
             gTasks[taskId].func = Task_OptionMenuSave;
         }
+        else if (gTasks[taskId].tMenuSelection == MENUITEM_SETTIME)
+        {
+            SetMainCallback2(CB2_StartWallClock);
+            gMain.savedCallback = CB2_InitOptionMenu;
+        }
         else if (gTasks[taskId].tMenuSelection == MENUITEM_SAVE)
         {
             gTasks[taskId].func = Task_OptionMenuSaveAndExit;
@@ -428,6 +440,10 @@ static void Task_OptionMenuSaveAndExit(u8 taskId)
     gSaveBlock2Ptr->optionsWindowFrameType = gTasks[taskId].tWindowFrameType;
     gSaveBlock2Ptr->optionsAlwaysRun = gTasks[taskId].tAlwaysRun;
 
+    RtcCalcLocalTime();
+    gSaveBlock2Ptr->lastBerryTreeUpdate = gLocalTime;
+    VarSet(VAR_DAYS, gLocalTime.days);
+
     PlaySE(SE_SAVE);
 
     BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
@@ -444,6 +460,10 @@ static void Task_OptionMenuSave(u8 taskId)
     gSaveBlock2Ptr->optionsWindowFrameType = gTasks[taskId].tWindowFrameType;
     gSaveBlock2Ptr->optionsAlwaysRun = gTasks[taskId].tAlwaysRun;
 
+    RtcCalcLocalTime();
+    gSaveBlock2Ptr->lastBerryTreeUpdate = gLocalTime;
+    VarSet(VAR_DAYS, gLocalTime.days);
+
     PlaySE(SE_SAVE);
 
     gTasks[taskId].func = Task_OptionMenuProcessInput;
@@ -451,6 +471,10 @@ static void Task_OptionMenuSave(u8 taskId)
 
 static void Task_OptionMenuExit(u8 taskId)
 {
+    RtcCalcLocalTime();
+    gSaveBlock2Ptr->lastBerryTreeUpdate = gLocalTime;
+    VarSet(VAR_DAYS, gLocalTime.days);
+
     BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
     gTasks[taskId].func = Task_OptionMenuFadeOut;
 }
@@ -461,7 +485,7 @@ static void Task_OptionMenuFadeOut(u8 taskId)
     {
         DestroyTask(taskId);
         FreeAllWindowBuffers();
-        SetMainCallback2(gMain.savedCallback);
+        SetMainCallback2(CB2_ReturnToFieldWithOpenMenu);
     }
 }
 
