@@ -120,13 +120,15 @@ u32 GetCurrentEVCap(void)
 }
 
 
-void AutomaticLevelCap(void)
+void SetPartyToLevelCap(void)
 {
     u8 levelCap = GetCurrentLevelCap();
 
     for (u8 i = 0; i < PARTY_SIZE; i++)
     {
         u16 species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES, NULL);
+        if (!species)
+            continue;
         u32 expToGive = gExperienceTables[gSpeciesInfo[species].growthRate][levelCap];
 
         SetMonData(&gPlayerParty[i], MON_DATA_EXP, &expToGive);
@@ -135,13 +137,19 @@ void AutomaticLevelCap(void)
         //TeachLevelUpMovesUntilMax(&gPlayerParty[i]);
     }
 
+}
 
+void SetBoxToLevelCap(void)
+{
+    u8 levelCap = GetCurrentLevelCap();
 
     for (u8 boxId = 0; boxId < TOTAL_BOXES_COUNT; boxId++)
     {
         for (u8 boxPosition = 0; boxPosition < IN_BOX_COUNT; boxPosition++)
         {
             u16 species = GetBoxMonData(&gPokemonStoragePtr->boxes[boxId][boxPosition], MON_DATA_SPECIES, NULL);
+            if (!species)
+                continue;
             u32 expToGive = gExperienceTables[gSpeciesInfo[species].growthRate][levelCap];
     
             SetBoxMonData(&gPokemonStoragePtr->boxes[boxId][boxPosition], MON_DATA_EXP, &expToGive);
@@ -149,6 +157,8 @@ void AutomaticLevelCap(void)
     }
 
 }
+
+
 
 
 void TeachLevelUpMovesUntilMax(struct Pokemon *mon)
