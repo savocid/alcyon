@@ -6,6 +6,7 @@
 
 - Updated start menu with PC / Fly aswell as reordering of options, also improved the code so you can more easily disable/enable menu items for debugging / preference.
 - Faster PC initialization.
+
   ![1](https://github.com/user-attachments/assets/4f448940-4b01-4a0d-adda-6fd8f57c8f24)
   ![2](https://github.com/user-attachments/assets/b72269a5-fd0e-4b55-838d-2742e0b7de07)
 - Additional Bag Pockets (ITEMS / *MEDICINE* / POKé BALLS / TMs & HMs / *POWER UP* / BERRIES / *TREASURES* / KEY ITEMS)
