@@ -1,5 +1,6 @@
 **Features**
 - Updated options menu with (TEXT SPEED / FRAME / ALWAYS RUN / GENERATE NEW SEED / SET TIME / SAVE) menu actions. Save only temporary saves the options selection not the game.
+
   ![13](https://github.com/user-attachments/assets/18977841-cf89-4d24-a95c-112f12487362)
   ![14](https://github.com/user-attachments/assets/07a9b0ce-a8c9-46d5-b27b-b99135c69f01)
 
