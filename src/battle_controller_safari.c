@@ -185,7 +185,7 @@ static void HandleInputChooseAction(u32 battler)
             ActionSelectionCreateCursorAt(gActionSelectionCursor[battler], 0);
         }
     }
-    else if (B_QUICK_MOVE_CURSOR_TO_RUN && JOY_NEW(B_BUTTON))
+    else if (B_WILD_QUICK_RUN && JOY_NEW(B_BUTTON))
     {
         PlaySE(SE_SELECT);
         ActionSelectionDestroyCursorAt(gActionSelectionCursor[battler]);
