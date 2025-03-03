@@ -53,6 +53,12 @@ extern const u8 gText_Key_Items[];
 extern const u8 gText_Poke_Balls[];
 extern const u8 gText_TMs_Hms[];
 extern const u8 gText_Berries2[];
+extern const u8 gText_Medicine[];
+extern const u8 gText_BattleItems[];
+extern const u8 gText_Treasures[];
+extern const u8 gText_MegaStones[];
+extern const u8 gText_ZCrystals[];
+extern const u8 gText_PowerUp[];
 
 extern const u8 gText_Single2[];
 extern const u8 gText_Double2[];
@@ -276,6 +282,7 @@ extern const u8 gText_OptionMenuCancel[];
 extern const u8 gText_OptionMenuSave[];
 extern const u8 gText_ButtonMode[];
 extern const u8 gText_Randomize[];
+extern const u8 gText_SetTime[];
 extern const u8 gText_AlwaysRun[];
 extern const u8 gText_AlwaysRunEnabled[];
 extern const u8 gText_AlwaysRunDisabled[];
@@ -2719,5 +2726,10 @@ extern const u8 gText_PlayerScurriedBackHome[];
 
 extern const u8 gText_Relearn[]; // move relearner from summary screen
 extern const u8 gText_Rename[]; // change nickname from summary screen
+
+extern const u8 gMenuText_Move[];
+extern const u8 gText_MoveItemWhere[];
+extern const u8 gText_XsYAnd[];
+extern const u8 gText_XsYWereSwapped[];
 
 #endif // GUARD_STRINGS_H
