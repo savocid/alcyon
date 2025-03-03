@@ -203,7 +203,6 @@ void NewGameInitData(void)
     ResetLotteryCorner();
     //WarpToTruck();
     WarpToStartingPoint();
-    AlcyonInit();
     RunScriptImmediately(EventScript_ResetAllMapFlags);
     ResetMiniGamesRecords();
     InitUnionRoomChatRegisteredTexts();
@@ -216,6 +215,7 @@ void NewGameInitData(void)
     ResetTrainerHillResults();
     ResetContestLinkResults();
     ResetItemFlags();
+    AlcyonInit();
 }
 
 static void ResetMiniGamesRecords(void)
